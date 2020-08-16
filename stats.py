@@ -3,6 +3,7 @@
 # code derived from
 # https://towardsdatascience.com/how-tracking-apps-analyse-your-gps-data-a-hands-on-tutorial-in-python-756d4db6715d
 
+import argparse
 import gpxpy
 import haversine
 import pandas as pd
@@ -10,11 +11,14 @@ import math
 import matplotlib.pyplot as plt
 
 
-# parse GPX
-gpx_file = open('../gpx-pipeline/test/RunnerUp_01.gpx', 'r')
-gpx = gpxpy.parse(gpx_file)
-data = gpx.tracks[0].segments[0].points
+# parse cli arguments
+parser = argparse.ArgumentParser("Generate gpx-stats.")
+parser.add_argument("gpx", type=argparse.FileType('r'))
+args = parser.parse_args()
 
+# parse GPX
+gpx = gpxpy.parse(args.gpx)
+data = gpx.tracks[0].segments[0].points
 
 # GPX to pandas data frame
 df = pd.DataFrame(columns=['lon', 'lat', 'alt', 'time'])
@@ -24,9 +28,14 @@ for segment in gpx.tracks[0].segments:
                         'alt': point.elevation, 'time': point.time},
                        ignore_index=True)
 
-df['time'] = df['time'].dt.tz_localize(None)
-print("> convert time to seconds for calculations")
-df['timestamp'] = df.apply(lambda row: row['time'].timestamp(), axis=1)
+print(df)
+
+try:
+    df['time'] = df['time'].dt.tz_localize(None)
+    print("> convert time to seconds for calculations")
+    df['timestamp'] = df.apply(lambda row: row['time'].timestamp(), axis=1)
+except:
+    df['timestamp'] = df.index
 print(df.head())
 
 print("> time as index")
