@@ -24,11 +24,20 @@ gpx = gpxpy.parse(args.gpx)
 data = gpx.tracks[0].segments[0].points
 
 # GPX to pandas data frame
-df = pd.DataFrame(columns=['lon', 'lat', 'alt', 'time'])
+df = pd.DataFrame(columns=['lon', 'lat', 'alt', 'time', 'hr', 'acc'])
 for segment in gpx.tracks[0].segments:
     for point in segment.points:
+        hr = None
+        accuracy = None
+        for e in point.extensions:
+            for i in e:
+                if 'hr' in i.tag:
+                    hr = int(i.text)
+                elif 'accuracy' in i.tag:
+                    accuracy = float(i.text)
         df = df.append({'lon': point.longitude, 'lat': point.latitude,
-                        'alt': point.elevation, 'time': point.time},
+                        'alt': point.elevation, 'time': point.time,
+                        'hr': hr, 'acc': accuracy},
                        ignore_index=True)
 logging.debug(df)
 
