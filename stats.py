@@ -6,6 +6,7 @@
 import argparse
 import gpxpy
 import haversine
+import json
 import logging
 import pandas as pd
 import math
@@ -13,7 +14,10 @@ import math
 
 # parse cli arguments
 parser = argparse.ArgumentParser("Generate gpx-stats.")
-parser.add_argument("gpx", type=argparse.FileType('r'))
+parser.add_argument("gpx", type=argparse.FileType('r'),
+                    help="input gpx file")
+parser.add_argument("json", type=argparse.FileType('w'),
+                    help="output json file")
 args = parser.parse_args()
 
 logging.basicConfig(level=logging.INFO,
@@ -79,12 +83,27 @@ df['delta_2d'] = hav2d
 df['delta_3d'] = hav3d
 df['2d'] = df['delta_2d'].cumsum()
 df['3d'] = df['delta_3d'].cumsum()
+df['speed'] = df['delta_2d'] / df['delta_t']
 logging.debug(df)
 
 logging.debug(f"distance: {df.iloc[-1]['2d']}")
 logging.debug(f"avg km/h: {df.iloc[-1]['2d'] / df.iloc[-1]['t'] * 3.6}")
-min_per_km = int(float(df.iloc[-1]['t']) / 60)
-sec_remainder = int(float(df.iloc[-1]['t']) - (min_per_km * 60))
+distance_km = df.iloc[-1]['2d'] / 1000.0
+min_per_km = int((df.iloc[-1]['t'] / 60.0) / distance_km)
+sec_remainder = round((df.iloc[-1]['t'] / distance_km) - (min_per_km * 60))
 logging.debug(f"pace min/km: { float(df.iloc[-1]['t']) / 60.0 / (df.iloc[-1]['2d'] / 1000)}")
+logging.debug(f"pace min/km: {min_per_km}:{sec_remainder}")
 
-logging.info(f"Generated stats from '{args.gpx.name}'.")
+
+# save summary to file
+json.dump({
+    "timeSeconds": df.iloc[-1]['t'],
+    "distanceMeters": df.iloc[-1]['2d'],
+    "speed": {
+        "avg": df['speed'].mean(),
+        "kilometersPerHour": df.iloc[-1]['2d'] / df.iloc[-1]['t'] * 3.6,
+        "pace": f"{min_per_km}:{sec_remainder}"
+    },
+}, args.json)
+
+logging.info(f"Generated stats '{args.json.name}' from '{args.gpx.name}'.")
