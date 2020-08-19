@@ -6,15 +6,18 @@
 import argparse
 import gpxpy
 import haversine
+import logging
 import pandas as pd
 import math
-import matplotlib.pyplot as plt
 
 
 # parse cli arguments
 parser = argparse.ArgumentParser("Generate gpx-stats.")
 parser.add_argument("gpx", type=argparse.FileType('r'))
 args = parser.parse_args()
+
+logging.basicConfig(level=logging.INFO,
+                    format="[%(asctime)s] [%(levelname)s] %(message)s")
 
 # parse GPX
 gpx = gpxpy.parse(args.gpx)
@@ -27,31 +30,30 @@ for segment in gpx.tracks[0].segments:
         df = df.append({'lon': point.longitude, 'lat': point.latitude,
                         'alt': point.elevation, 'time': point.time},
                        ignore_index=True)
-
-print(df)
+logging.debug(df)
 
 try:
     df['time'] = df['time'].dt.tz_localize(None)
-    print("> convert time to seconds for calculations")
+    logging.debug("> convert time to seconds for calculations")
     df['timestamp'] = df.apply(lambda row: row['time'].timestamp(), axis=1)
 except:
     df['timestamp'] = df.index
-print(df.head())
+logging.debug(df.head())
 
-print("> time as index")
+logging.debug("> time as index")
 df = df.set_index('time')
 
-print("> data including null values")
+logging.debug("> data including null values")
 df_null = df[df.isnull().any(axis=1)]
-print(df_null.head())
+logging.debug(df_null.head())
 
-print("> sort by time")
+logging.debug("> sort by time")
 df = df.sort_index()
-print(df.head())
-print(":")
-print(df.tail())
+logging.debug(df.head())
+logging.debug(":")
+logging.debug(df.tail())
 
-print("> calculate distance")
+logging.debug("> calculate distance")
 df['delta_t'] = (df.timestamp - df.timestamp.shift()).fillna(0)
 df['t'] = df['delta_t'].cumsum()
 hav2d = [0.0]
@@ -68,15 +70,12 @@ df['delta_2d'] = hav2d
 df['delta_3d'] = hav3d
 df['2d'] = df['delta_2d'].cumsum()
 df['3d'] = df['delta_3d'].cumsum()
-print(df)
+logging.debug(df)
 
-print(f"distance: {df.iloc[-1]['2d']}")
-print(f"avg km/h: {df.iloc[-1]['2d'] / df.iloc[-1]['t'] * 3.6}")
+logging.debug(f"distance: {df.iloc[-1]['2d']}")
+logging.debug(f"avg km/h: {df.iloc[-1]['2d'] / df.iloc[-1]['t'] * 3.6}")
 min_per_km = int(float(df.iloc[-1]['t']) / 60)
 sec_remainder = int(float(df.iloc[-1]['t']) - (min_per_km * 60))
-print(f"pace min/km: { float(df.iloc[-1]['t']) / 60.0 / (df.iloc[-1]['2d'] / 1000)}")
+logging.debug(f"pace min/km: { float(df.iloc[-1]['t']) / 60.0 / (df.iloc[-1]['2d'] / 1000)}")
 
-df.plot.line(x='lon', y='lat')
-df.plot(y='alt')
-
-plt.show()
+logging.info(f"Generated stats from '{args.gpx.name}'.")
