@@ -4,6 +4,7 @@ import argparse
 import gpxpy
 import logging
 import pandas as pd
+from sqlalchemy import create_engine
 
 from stats import enrich, summary
 
@@ -43,3 +44,9 @@ logging.debug(df)
 df = enrich(df, logging)
 stats = summary(df, logging)
 logging.info(stats)
+
+
+# %% save
+DB = "gpx.db"
+engine = create_engine(f"sqlite:///{DB}", echo=True)
+df.to_sql("gpx", engine, if_exists="append")
