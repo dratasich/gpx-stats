@@ -1,0 +1,3 @@
+gpxpy==1.4.2
+haversine==2.3.0
+pandas==1.1.2
