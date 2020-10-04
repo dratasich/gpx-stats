@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
 
+# %% imports
 import argparse
+from datetime import datetime
 import gpxpy
 import logging
+import os.path
 import pandas as pd
 from sqlalchemy import create_engine
 
 from stats import enrich, summary
 
-# parse cli arguments
+
+# %% parse cli arguments
 parser = argparse.ArgumentParser("GPX parser.")
 parser.add_argument("gpx", type=argparse.FileType('r'),
                     help="input gpx file")
 args = parser.parse_args()
 
+# %% init logger
 logging.basicConfig(level=logging.INFO,
                     format="[%(asctime)s] [%(levelname)s] %(message)s")
 
@@ -44,6 +49,12 @@ logging.debug(df)
 df = enrich(df, logging)
 stats = summary(df, logging)
 logging.info(stats)
+
+# identify the gpx file
+# add some load and file properties for reference into the gpx table
+df['load_timestamp'] = datetime.utcnow()
+df['load_path'] = args.gpx.name
+df['gpx_name'] = gpx.tracks[0].name
 
 
 # %% save
