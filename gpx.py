@@ -85,13 +85,33 @@ logging.debug(df)
 # %% enrich
 df = enrich(df, logging)
 stats = summary(df, logging)
-logging.info(f"Summary: {stats}")
+logging.info(f"Summary: {stats.to_json()}")
+
+# %% activity type
+def activity(name, km_per_hour):
+    if "Running" in name:
+        return "Running"
+    elif "Biking" in name or "Cycling" in name:
+        return "Cycling"
+    elif km_per_hour >= 14:
+        return "Cycling"
+    elif km_per_hour >= 8:
+        return "Running"
+    return "Unknown"
+
+activity_type = activity(gpxid, stats.loc[0, "speedMetersPerSecond"] * 3.6)
+df['activity'] = activity_type
+stats['activity'] = activity_type
 
 # %% save gpx data
-# gpx identifier
+# gpx
 df['gpx_name'] = gpxid
 df.to_sql("gpx", engine, if_exists="append")
 logging.info(f"GPX data of '{gpxid}' saved to database.")
+# stats
+stats['gpx_name'] = gpxid
+stats.to_sql("summary", engine, if_exists="append", index=False)
+logging.info(f"GPX stats of '{gpxid}' saved to database.")
 
 # %% create meta data
 meta = {}

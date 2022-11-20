@@ -22,7 +22,6 @@ def enrich(df, logging):
     """
 
     try:
-        df['time'] = df['time'].dt.tz_localize(None)
         logging.debug("> convert time to seconds for calculations")
         df['timestamp'] = df.apply(lambda row: row['time'].timestamp(), axis=1)
     except:
@@ -79,12 +78,10 @@ def summary(df, logging):
         f"pace min/km: { float(df.iloc[-1]['t']) / 60.0 / (df.iloc[-1]['2d'] / 1000)}")
     logging.debug(f"pace min/km: {min_per_km}:{sec_remainder}")
 
-    return {
+    return pd.DataFrame([{
+        "date": df.index[0],
         "timeSeconds": df.iloc[-1]['t'],
         "distanceMeters": df.iloc[-1]['2d'],
-        "speed": {
-            "avg": df['speed'].mean(),
-            "kilometersPerHour": df.iloc[-1]['2d'] / df.iloc[-1]['t'] * 3.6,
-            "pace": f"{min_per_km}:{sec_remainder}"
-        },
-    }
+        "speedMetersPerSecond": df.iloc[-1]['2d'] / df.iloc[-1]['t'],
+        "pace": f"{min_per_km}:{sec_remainder}",
+    }])
