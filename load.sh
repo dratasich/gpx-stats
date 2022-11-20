@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DIR="data"
+DIR=$1
 
 for f in $DIR/*.gpx
 do
-    ./gpx.py "$f"
+    poetry run ./gpx.py "$f"
 done

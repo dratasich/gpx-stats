@@ -7,7 +7,7 @@ import gpxpy
 import logging
 import os.path
 import pandas as pd
-from sqlalchemy import create_engine, exc
+from sqlalchemy import create_engine, inspect
 import sys
 
 from stats import enrich, summary
@@ -31,15 +31,18 @@ engine = create_engine(f"sqlite:///{DB}")
 TABLE_GPX = "gpx"
 TABLE_FILES = "files"
 
+# %% get metadata
+insp = inspect(engine)
+
 # %% check if gpx exists in database
-if engine.has_table(TABLE_FILES):
+if insp.has_table(TABLE_FILES):
     res = engine.execute(f"""
-        SELECT 1 
+        SELECT 1
         FROM {TABLE_FILES}
         WHERE load_path = '{args.gpx.name}'
         """).fetchall()
     if len(res) >= 1:
-        logging.error(f"File '{args.gpx.name}' already loaded to database.")
+        logging.warning(f"File '{args.gpx.name}' already loaded to database.")
         sys.exit(os.EX_DATAERR)
 
 
@@ -48,7 +51,7 @@ gpx = gpxpy.parse(args.gpx)
 gpxid = gpx.tracks[0].name
 
 # %% check if gpx exists in database
-if engine.has_table(TABLE_FILES):
+if insp.has_table(TABLE_FILES):
     res = engine.execute(f"""
         SELECT load_path, load_timestamp
         FROM {TABLE_FILES}
