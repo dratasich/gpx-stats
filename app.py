@@ -10,17 +10,22 @@ import plotly.express as px
 
 # %% sample data
 df = pd.DataFrame([
-        {"date": datetime.strptime("2020-01-05", "%Y-%m-%d"), "speed": 8.1},
-        {"date": datetime.strptime("2020-02-05", "%Y-%m-%d"), "speed": 8.0},
-        {"date": datetime.strptime("2020-02-09", "%Y-%m-%d"), "speed": 9.0},
-        {"date": datetime.strptime("2020-03-05", "%Y-%m-%d"), "speed": 8.4},
-        {"date": datetime.strptime("2020-05-05", "%Y-%m-%d"), "speed": 8.0},
+        {"date": datetime.strptime("2020-01-05", "%Y-%m-%d"), "speed": 3.1},
+        {"date": datetime.strptime("2020-02-05", "%Y-%m-%d"), "speed": 4.0},
+        {"date": datetime.strptime("2020-02-09", "%Y-%m-%d"), "speed": 3.5},
+        {"date": datetime.strptime("2020-03-05", "%Y-%m-%d"), "speed": 3.3},
+        {"date": datetime.strptime("2020-05-05", "%Y-%m-%d"), "speed": 3.0},
     ])
 
 # add columns for grouping
 df["year"] = df.apply(lambda row: row.date.year, axis=1)
 df["month"] = df.apply(lambda row: row.date.month, axis=1)
 df["week"] = df.apply(lambda row: row.date.week, axis=1)
+
+# speed values to standard-running units (km/h)
+df["speed"] = df["speed"] * 3.6
+# add pace min/km (from speed in m/s)
+df["pace"] = 60 / df["speed"]
 
 # %% plot
 #fig = px.box(df, x="month", y="speed", points="all")
@@ -45,7 +50,7 @@ app.layout = html.Div([
     dcc.RadioItems(
         id='y-axis',
         options=[{'value': x, 'label': x}
-                 for x in ['speed']],
+                 for x in ['speed', 'pace']],
         value='speed',
         labelStyle={'display': 'inline-block'}
     ),
