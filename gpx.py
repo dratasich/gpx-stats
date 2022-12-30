@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO,
 logging.info(f"Load '{args.gpx.name}'...")
 
 # %% database setup
-DB = "gpx.db"
+DB = "db/gpx.db"
 engine = create_engine(f"sqlite:///{DB}")
 TABLE_GPX = "gpx"
 TABLE_FILES = "files"

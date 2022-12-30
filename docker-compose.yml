@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+  # https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/
+  grafana:
+    image: grafana/grafana-oss:8.5.15
+    ports:
+      - 3000:3000
+    # https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables
+    environment:
+      - GF_INSTALL_PLUGINS=frser-sqlite-datasource
+      #- GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION=true
+      #- GF_AUTH_DISABLE_LOGIN_FORM=true
+    # https://grafana.com/tutorials/provision-dashboards-and-data-sources/
+    volumes:
+      - ./grafana/config/dashboards.yaml:/etc/grafana/provisioning/dashboards/gpx.yaml
+      - ./grafana/config/datasources.yaml:/etc/grafana/provisioning/datasources/gpx.yaml
+      - ./db/gpx.db:/app/gpx.db
+      - ./grafana/dashboards:/app/dashboards
+    #user: '1000'
