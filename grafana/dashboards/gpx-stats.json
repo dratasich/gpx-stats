@@ -24,10 +24,212 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
+  "iteration": 1672429156748,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 16,
+      "title": "Stats",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "PC99C868E6302BA2B"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "queryText": "SELECT unixepoch(date) as time, strftime(\"%Y-%m\", date) as ym, activity, timeSeconds/60 as \"duration (min)\", distanceMeters/1000 as \"distance (km)\", speedMetersPerSecond*3.6 as \"avg speed (km/h)\", pace as \"pace\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY ym",
+          "queryType": "table",
+          "rawQueryText": "SELECT unixepoch(date) as time, strftime(\"%Y-%m\", date) as ym, activity, timeSeconds/60 as \"duration (min)\", distanceMeters/1000 as \"distance (km)\", speedMetersPerSecond*3.6 as \"avg speed (km/h)\", pace as \"pace\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY ym",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Average duration and distance per month",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 12,
+      "panels": [],
+      "title": "Records",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "PC99C868E6302BA2B"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.15",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "queryText": "SELECT unixepoch(date) as time, activity, max(timeSeconds)/60 as \"duration (min)\", max(distanceMeters)/1000 as \"distance (km)\", max(speedMetersPerSecond)*3.6 as \"avg speed (km/h)\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "queryType": "table",
+          "rawQueryText": "SELECT unixepoch(date) as time, activity, max(timeSeconds)/60 as \"duration (min)\", max(distanceMeters)/1000 as \"distance (km)\", max(speedMetersPerSecond)*3.6 as \"avg speed (km/h)\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "max(.)",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Activities",
+      "type": "row"
+    },
     {
       "datasource": {
         "type": "frser-sqlite-datasource",
@@ -39,19 +241,253 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 0,
+        "y": 14
+      },
+      "id": 14,
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.5.15",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "queryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "queryType": "table",
+          "rawQueryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "count(.)",
+      "type": "piechart"
+    },
+    {
+      "cards": {},
+      "color": {
+        "cardColor": "#E0B400",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateBuGn",
+        "exponent": 0.5,
+        "mode": "opacity"
+      },
+      "dataFormat": "timeseries",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "PC99C868E6302BA2B"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 19,
+        "x": 5,
+        "y": 14
+      },
+      "heatmap": {},
+      "hideZeroBuckets": false,
+      "highlightCards": true,
+      "id": 18,
+      "legend": {
+        "show": false
+      },
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "queryText": "SELECT unixepoch(date) as time, activity, timeSeconds/60 as \"duration (min)\", distanceMeters/1000 as \"distance (km)\", speedMetersPerSecond*3.6 as \"avg speed (km/h)\", pace as \"pace\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\n",
+          "queryType": "table",
+          "rawQueryText": "SELECT unixepoch(date) as time, activity, timeSeconds/60 as \"duration (min)\", distanceMeters/1000 as \"distance (km)\", speedMetersPerSecond*3.6 as \"avg speed (km/h)\", pace as \"pace\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Active days",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "format": "short",
+        "logBase": 1,
+        "show": true
+      },
+      "yBucketBound": "auto"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "PC99C868E6302BA2B"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 0,
-            "fillOpacity": 80,
-            "gradientMode": "none",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "lineWidth": 1,
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "queryText": "SELECT unixepoch(date) as time, timeSeconds / 60 as \"duration (min)\", activity, gpx_name FROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\n",
+          "queryType": "table",
+          "rawQueryText": "SELECT unixepoch(date) as time, timeSeconds / 60 as \"duration (min)\", activity, gpx_name FROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Duration",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "PC99C868E6302BA2B"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
           },
           "mappings": [],
@@ -68,35 +504,27 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 0
+        "x": 12,
+        "y": 22
       },
-      "id": 4,
+      "id": 6,
       "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "groupWidth": 0.7,
         "legend": {
           "calcs": [],
-          "displayMode": "hidden",
-          "placement": "right"
+          "displayMode": "list",
+          "placement": "bottom"
         },
-        "orientation": "auto",
-        "showValue": "never",
-        "stacking": "none",
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
-        },
-        "xTickLabelRotation": -45,
-        "xTickLabelSpacing": 0
+        }
       },
       "targets": [
         {
@@ -104,9 +532,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT date, timeSeconds / 60 as \"duration (min)\", activity, gpx_name FROM summary\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
+          "queryText": "SELECT unixepoch(date) as time, distanceMeters/1000 as \"distance (km)\", activity, gpx_name from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000",
           "queryType": "table",
-          "rawQueryText": "SELECT date, timeSeconds / 60 as \"duration (min)\", activity, gpx_name FROM summary\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
+          "rawQueryText": "SELECT unixepoch(date) as time, distanceMeters/1000 as \"distance (km)\", activity, gpx_name from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -114,8 +542,8 @@
           ]
         }
       ],
-      "title": "Duration",
-      "type": "barchart"
+      "title": "Distance",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -153,7 +581,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 30
       },
       "id": 2,
       "options": {
@@ -165,12 +593,7 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "date"
-          }
-        ]
+        "sortBy": []
       },
       "pluginVersion": "8.5.15",
       "targets": [
@@ -179,9 +602,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT * FROM summary\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
+          "queryText": "SELECT * FROM summary\nORDER BY date DESC\n--WHERE unixepoch(date) >= $__from\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
           "queryType": "table",
-          "rawQueryText": "SELECT * FROM summary\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
+          "rawQueryText": "SELECT * FROM summary\nORDER BY date DESC\n--WHERE unixepoch(date) >= $__from\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -189,7 +612,7 @@
           ]
         }
       ],
-      "title": "GPX entries from 'summary' (raw)",
+      "title": "All GPX entries from 'summary' (raw)",
       "type": "table"
     }
   ],
@@ -197,16 +620,43 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "Cycling",
+            "Running"
+          ],
+          "value": [
+            "Cycling",
+            "Running"
+          ]
+        },
+        "definition": "SELECT DISTINCT activity FROM summary",
+        "description": "Type of activity",
+        "hide": 0,
+        "includeAll": false,
+        "multi": true,
+        "name": "Activity",
+        "options": [],
+        "query": "SELECT DISTINCT activity FROM summary",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1y",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "GPX Stats",
   "uid": "D0fQ_at4z",
-  "version": 1,
+  "version": 6,
   "weekStart": ""
 }
