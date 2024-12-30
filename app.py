@@ -4,14 +4,14 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
 import pandas as pd
-import plotly.graph_objects as go
 import plotly.express as px
 from sqlalchemy import create_engine
 
 
 # %% init logger
-logging.basicConfig(level=logging.INFO,
-                    format="[%(asctime)s] [%(levelname)s] %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="[%(asctime)s] [%(levelname)s] %(message)s"
+)
 
 # %% database setup
 DB = "gpx.db"
@@ -35,8 +35,8 @@ df["speed (km/h)"] = df["speedMetersPerSecond"] * 3.6
 df["pace (min/km)"] = 60 / df["speed (km/h)"]
 
 # %% plot
-#fig = px.box(df, x="month", y="speed", points="all")
-#fig.show()
+# fig = px.box(df, x="month", y="speed", points="all")
+# fig.show()
 
 # %% ideas
 # https://plotly.com/python/2D-Histogram/
@@ -44,25 +44,28 @@ df["pace (min/km)"] = 60 / df["speed (km/h)"]
 # %%
 app = dash.Dash(__name__)
 
-app.layout = html.Div([
-    html.P("x-axis:"),
-    dcc.Checklist(
-        id='x-axis',
-        options=[{'value': x, 'label': x}
-                 for x in ['year', 'month', 'week']],
-        value=['month'],
-        labelStyle={'display': 'inline-block'}
-    ),
-    html.P("y-axis:"),
-    dcc.RadioItems(
-        id='y-axis',
-        options=[{'value': x, 'label': x}
-                 for x in ['speed (km/h)', 'pace (min/km)']],
-        value='speed (km/h)',
-        labelStyle={'display': 'inline-block'}
-    ),
-    dcc.Graph(id="box-plot"),
-])
+app.layout = html.Div(
+    [
+        html.P("x-axis:"),
+        dcc.Checklist(
+            id="x-axis",
+            options=[{"value": x, "label": x} for x in ["year", "month", "week"]],
+            value=["month"],
+            labelStyle={"display": "inline-block"},
+        ),
+        html.P("y-axis:"),
+        dcc.RadioItems(
+            id="y-axis",
+            options=[
+                {"value": x, "label": x} for x in ["speed (km/h)", "pace (min/km)"]
+            ],
+            value="speed (km/h)",
+            labelStyle={"display": "inline-block"},
+        ),
+        dcc.Graph(id="box-plot"),
+    ]
+)
+
 
 @app.callback(
     Output("box-plot", "figure"),
@@ -72,5 +75,6 @@ app.layout = html.Div([
 def box_plot(x, y):
     fig = px.box(df, x=x, y=y, points="all", color="activity")
     return fig
+
 
 app.run_server(debug=True)

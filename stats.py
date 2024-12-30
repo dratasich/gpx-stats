@@ -4,7 +4,6 @@
 # https://towardsdatascience.com/how-tracking-apps-analyse-your-gps-data-a-hands-on-tutorial-in-python-756d4db6715d
 
 import haversine
-import logging
 import pandas as pd
 import math
 
@@ -23,13 +22,13 @@ def enrich(df, logging):
 
     try:
         logging.debug("> convert time to seconds for calculations")
-        df['timestamp'] = df.apply(lambda row: row['time'].timestamp(), axis=1)
+        df["timestamp"] = df.apply(lambda row: row["time"].timestamp(), axis=1)
     except:
-        df['timestamp'] = df.index
+        df["timestamp"] = df.index
     logging.debug(df.head())
 
     logging.debug("> time as index")
-    df = df.set_index('time')
+    df = df.set_index("time")
 
     logging.debug("> data including null values")
     df_null = df[df.isnull().any(axis=1)]
@@ -42,23 +41,23 @@ def enrich(df, logging):
     logging.debug(df.tail())
 
     logging.debug("> calculate distance")
-    df['delta_t'] = (df.timestamp - df.timestamp.shift()).fillna(0)
-    df['t'] = df['delta_t'].cumsum()
+    df["delta_t"] = (df.timestamp - df.timestamp.shift()).fillna(0)
+    df["t"] = df["delta_t"].cumsum()
     hav2d = [0.0]
     hav3d = [0.0]
     for i in range(len(df)):
         if i == 0:
             continue
-        a = (df.iloc[i-1].lat, df.iloc[i-1].lon)
+        a = (df.iloc[i - 1].lat, df.iloc[i - 1].lon)
         b = (df.iloc[i].lat, df.iloc[i].lon)
         hav2d.append(haversine.haversine(a, b, unit=haversine.Unit.METERS))
-        dalt = df.iloc[i].alt - df.iloc[i-1].alt
-        hav3d.append(math.sqrt(hav2d[-1]**2 + dalt**2))
-    df['delta_2d'] = hav2d
-    df['delta_3d'] = hav3d
-    df['2d'] = df['delta_2d'].cumsum()
-    df['3d'] = df['delta_3d'].cumsum()
-    df['speed'] = df['delta_2d'] / df['delta_t']
+        dalt = df.iloc[i].alt - df.iloc[i - 1].alt
+        hav3d.append(math.sqrt(hav2d[-1] ** 2 + dalt**2))
+    df["delta_2d"] = hav2d
+    df["delta_3d"] = hav3d
+    df["2d"] = df["delta_2d"].cumsum()
+    df["3d"] = df["delta_3d"].cumsum()
+    df["speed"] = df["delta_2d"] / df["delta_t"]
     logging.debug(df)
 
     return df
@@ -69,19 +68,27 @@ def summary(df, logging):
 
     Prerequisite: GPX dataframe is enriched.
     """
-    logging.debug(f"distance: {df.iloc[-1]['2d']}")
-    logging.debug(f"avg km/h: {df.iloc[-1]['2d'] / df.iloc[-1]['t'] * 3.6}")
-    distance_km = df.iloc[-1]['2d'] / 1000.0
-    min_per_km = int((df.iloc[-1]['t'] / 60.0) / distance_km)
-    sec_remainder = round((df.iloc[-1]['t'] / distance_km) - (min_per_km * 60))
-    logging.debug(
-        f"pace min/km: { float(df.iloc[-1]['t']) / 60.0 / (df.iloc[-1]['2d'] / 1000)}")
-    logging.debug(f"pace min/km: {min_per_km}:{sec_remainder}")
-
-    return pd.DataFrame([{
+    stats = {
         "date": df.index[0],
-        "timeSeconds": df.iloc[-1]['t'],
-        "distanceMeters": df.iloc[-1]['2d'],
-        "speedMetersPerSecond": df.iloc[-1]['2d'] / df.iloc[-1]['t'],
-        "pace": f"{min_per_km}:{sec_remainder}",
-    }])
+        "timeSeconds": df.iloc[-1]["t"],
+        "distanceMeters": df.iloc[-1]["2d"],
+        # defaults (added only when distance > 0)
+        "speedMetersPerSecond": None,
+        "pace": None,
+    }
+    logging.debug(f"distance: {df.iloc[-1]['2d']}")
+
+    distance_km = df.iloc[-1]["2d"] / 1000.0
+    if distance_km != 0 and stats["timeSeconds"] != 0:
+        logging.debug(f"avg km/h: {df.iloc[-1]['2d'] / df.iloc[-1]['t'] * 3.6}")
+        # add speed info
+        min_per_km = int((df.iloc[-1]["t"] / 60.0) / distance_km)
+        sec_remainder = round((df.iloc[-1]["t"] / distance_km) - (min_per_km * 60))
+        logging.debug(
+            f"pace min/km: { float(df.iloc[-1]['t']) / 60.0 / (df.iloc[-1]['2d'] / 1000)}"
+        )
+        logging.debug(f"pace min/km: {min_per_km}:{sec_remainder}")
+        stats["speedMetersPerSecond"] = df.iloc[-1]["2d"] / df.iloc[-1]["t"]
+        stats["pace"] = f"{min_per_km}:{sec_remainder}"
+
+    return pd.DataFrame([stats])
