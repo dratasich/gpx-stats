@@ -8,9 +8,7 @@ Dashboard visualizing stats based on gpx files.
 
 ```bash
 # install environment
-$ poetry install
-# load environment
-$ poetry shell
+$ uv sync
 ```
 
 

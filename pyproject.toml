@@ -1,26 +1,29 @@
-[tool.poetry]
+[project]
 name = "gpx-stats"
-version = "0.1.0"
 description = "GPX processing and visualization"
-authors = ["Denise Ratasich <dratasich@users.noreply.github.com>"]
-license = "MIT"
+version = "0.1.0"
+authors = [
+    {name = "Denise Ratasich", email = "dratasich@users.noreply.github.com"},
+]
+license = {text = "MIT"}
+requires-python = "<4.0,>=3.11"
 
-[tool.poetry.dependencies]
-python = "^3.11"
-gpxpy = "^1.4.2"
-haversine = "^2.5.1"
-pandas = "^2.2.0"
-SQLAlchemy = "^2.0.36"
+dependencies = [
+    "gpxpy<2.0.0,>=1.4.2",
+    "haversine<3.0.0,>=2.5.1",
+    "pandas<3.0.0,>=2.2.0",
+    "SQLAlchemy<3.0.0,>=2.0.36",
+]
 
-[tool.poetry.group.dashapp.dependencies]
-dash = "^2.18.2"
+[project.optional-dependencies]
+dashapp = [
+    "dash<3.0.0,>=2.18.2",
+]
 
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.8.4"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "ruff<1.0.0,>=0.8.4",
+]
 
 # https://docs.astral.sh/ruff/configuration/
 [tool.ruff]
