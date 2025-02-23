@@ -25,7 +25,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1672429156748,
+  "iteration": 1740326053065,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -84,8 +84,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -162,8 +161,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -403,8 +401,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -495,8 +492,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -565,17 +561,78 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "none"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "speedMetersPerSecond"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "duration"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "speed"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "date (started)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "distance"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "lengthm"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 11,
@@ -593,7 +650,12 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": []
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "timeSeconds"
+          }
+        ]
       },
       "pluginVersion": "8.5.15",
       "targets": [
@@ -602,9 +664,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT * FROM summary\nORDER BY date DESC\n--WHERE unixepoch(date) >= $__from\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
+          "queryText": "SELECT date as 'date (started)', timeSeconds as 'duration', distanceMeters as 'distance', speedMetersPerSecond as 'speed', pace, activity, gpx_name as filename FROM summary\nORDER BY date DESC\n--WHERE unixepoch(date) >= $__from\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
           "queryType": "table",
-          "rawQueryText": "SELECT * FROM summary\nORDER BY date DESC\n--WHERE unixepoch(date) >= $__from\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
+          "rawQueryText": "SELECT date as 'date (started)', timeSeconds as 'duration', distanceMeters as 'distance', speedMetersPerSecond as 'speed', pace, activity, gpx_name as filename FROM summary\nORDER BY date DESC\n--WHERE unixepoch(date) >= $__from\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -612,10 +674,11 @@
           ]
         }
       ],
-      "title": "All GPX entries from 'summary' (raw)",
+      "title": "All GPX entries from 'summary'",
       "type": "table"
     }
   ],
+  "refresh": false,
   "schemaVersion": 36,
   "style": "dark",
   "tags": [],
@@ -623,15 +686,13 @@
     "list": [
       {
         "current": {
-          "selected": true,
-          "text": [
-            "Cycling",
-            "Running"
-          ],
-          "value": [
-            "Cycling",
-            "Running"
-          ]
+          "selected": false,
+          "text": "Running",
+          "value": "Running"
+        },
+        "datasource": {
+          "type": "frser-sqlite-datasource",
+          "uid": "PC99C868E6302BA2B"
         },
         "definition": "SELECT DISTINCT activity FROM summary",
         "description": "Type of activity",
@@ -650,13 +711,13 @@
     ]
   },
   "time": {
-    "from": "now-1y",
+    "from": "now-2y",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "GPX Stats",
   "uid": "D0fQ_at4z",
-  "version": 6,
+  "version": 2,
   "weekStart": ""
 }
