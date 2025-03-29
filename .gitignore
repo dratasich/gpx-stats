@@ -1,4 +1,7 @@
 *~
+*.old
+*.bak
+
 **/__pycache__
 *.pyc
 *.ipynb*
@@ -8,8 +11,9 @@
 
 # data dirs
 db
-gpx.db
-./data/
+*.db
+data
+!tests/data
 
 # env
 .venv
@@ -20,3 +24,4 @@ __pycache__
 .ruff_cache
 .mypy_cache
 .pytest_cache
+.pdm-build
