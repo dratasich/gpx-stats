@@ -14,9 +14,9 @@ def data_dir():
 
 
 def test_load_script(data_dir: str):
-    db_path = f"{datetime.now(UTC).timestamp()}_test.db"
+    db_path = f"{int(datetime.now(UTC).timestamp())}_test.db"
     # load data to db
-    subprocess.run(f"./load.sh {data_dir} {db_path}", shell=True, check=True)
+    subprocess.run(f"./load.sh {data_dir} {db_path}", shell=True)
     assert os.path.exists(db_path)
     db = StatsRepository(db_path)
     assert db.has_file("RunnerUp_2025-02-03-08-31-00_Running.gpx")
