@@ -30,7 +30,6 @@ repos:
     hooks:
       - id: pytest
         name: pytest
-        # skip integration tests, as these take quite a long time
         entry: uv run pytest tests
         language: system
         pass_filenames: false

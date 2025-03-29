@@ -29,7 +29,8 @@ def test_parse_invalid_file(data_dir: str):
 def test_route_data_no_segments(data_dir: str):
     parser = GPXParser()
     parser.parse(f"{data_dir}/RunnerUp_2025-02-11-17-30-00_Cycling.gpx")
-    assert parser.route_data() is None
+    with pytest.raises(ValueError):
+        parser.route_data()
 
 def test_route(data_dir: str):
     parser = GPXParser()

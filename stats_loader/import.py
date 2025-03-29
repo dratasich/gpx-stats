@@ -5,12 +5,11 @@ import argparse
 from datetime import UTC, datetime
 import logging
 import os.path
-import pandas as pd
-from sqlalchemy import create_engine, inspect, text
 import sys
 
 from parser.file import File
 from parser.gpx import GPXParser
+from stats_repository import StatsRepository
 
 
 # %% parse cli arguments
@@ -27,71 +26,43 @@ logging.basicConfig(
 logging.info(f"Load '{args.path}'...")
 
 # %% database setup
-DB = args.db
-engine = create_engine(f"sqlite:///{DB}")
-TABLE_FILES = "files"
+repo = StatsRepository(args.db)
 
-# %% get metadata
-insp = inspect(engine)
-
-# %% check if gpx exists in database
-if insp.has_table(TABLE_FILES):
-    with engine.connect() as conn:
-        res = conn.execute(
-            text(f"""
-            select 1
-            from {TABLE_FILES}
-            where load_path = '{args.gpx.name}'
-            """)
-        ).fetchall()
-        if len(res) >= 1:
-            logging.warning(f"File '{args.gpx.name}' already loaded to database.")
-            sys.exit(os.EX_DATAERR)
-
+# %% check if file exists in database
+if repo.has_file(args.path):
+    sys.exit(os.EX_DATAERR)
 
 # %% parse GPX
 parser = GPXParser()
-parser.parse(args.path)
-gpxid = parser.gpxid
+try:
+    parser.parse(args.path)
+except ValueError as e:
+    logging.warning(e)
+    sys.exit(os.EX_DATAERR)
 
-# %% check if gpx exists in database
-if insp.has_table(TABLE_FILES):
-    with engine.connect() as conn:
-        res = conn.execute(
-            text(f"""
-            SELECT load_path, load_timestamp
-            FROM {TABLE_FILES}
-            WHERE gpx_name = '{gpxid}'
-            """)
-        ).fetchall()
-        if len(res) >= 1:
-            logging.error(
-                f"""GPX with same id '{gpxid}' already loaded to database."""
-                f"""Timestamp and path: {res[0][1]} '{res[0]}'"""
-            )
-            sys.exit(os.EX_DATAERR)
-
+# %% check if data with same id exists in database
+if parser.gpxid is None:
+    logging.error("No GPX id found (error while parsing?).")
+    sys.exit(os.EX_DATAERR)
+if repo.has_id(parser.gpxid):
+    sys.exit(os.EX_DATAERR)
 
 # %% read route/points and extract the summary / stats from it
-stats = parser.summary()
-logging.debug(stats)
-
+try:
+    stats = parser.summary()
+    logging.debug(stats)
+except ValueError as e:
+    logging.warning(e)
+    sys.exit(os.EX_DATAERR)
 
 # %% save summary to db
-pd.DataFrame(stats.__dict__, index=["id"]).to_sql(
-    "summary", engine, if_exists="append", index=False
-)
-logging.info(f"GPX stats of '{stats.id}' saved to database.")
+repo.save_summary(stats)
 
-# %% create meta data
+# %% save meta data
 assert parser.filename is not None, "With a summary we must also have a filename."
 f = File(
     id=stats.id,
     loaded=datetime.now(UTC),
     basename=parser.filename,
 )
-
-# %% save meta data
-df = pd.DataFrame.from_records([f.__dict__], index=["id"])
-df.to_sql("files", engine, if_exists="append")
-logging.info(f"File data of '{f.id}' saved to database.")
+repo.save_file(f)

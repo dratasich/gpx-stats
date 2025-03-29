@@ -39,11 +39,10 @@ class GPXParser:
         self._gpxid = self._gpx.tracks[0].name
         logger.info(f"Parsed gpx file with id {self._gpxid}.")
 
-    def route_data(self) -> pd.DataFrame | None:
+    def route_data(self) -> pd.DataFrame:
         """Convert gpx to pandas data frame."""
         if len(self._gpx.tracks[0].segments) == 0:
-            logger.error("No track segments found.")
-            return None
+            raise ValueError("No track segments found.")
 
         points = []
         for segment in self._gpx.tracks[0].segments:
