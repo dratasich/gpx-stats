@@ -4,7 +4,7 @@ services:
 
   # https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/
   grafana:
-    image: grafana/grafana-oss:8.5.15
+    image: grafana/grafana-oss:11.6.0
     ports:
       - 3000:3000
     # https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables

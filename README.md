@@ -20,10 +20,13 @@ Load gpx files, generate metadata and save to sqlite database:
 ```bash
 $ ./import.py data/<file>.gpx
 ```
+If the file has no tracks (e.g., because its a manual entry)
+then try the `tcx` file (should contain duration and distance).
 
 Load all gpx files from a folder:
 ```bash
-$ ./load.sh data stats.db
+mkdir db
+$ ./load.sh data db/gpx.db
 ```
 
 Visualize [stats](http://localhost:8050):

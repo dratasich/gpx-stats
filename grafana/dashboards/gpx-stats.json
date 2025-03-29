@@ -25,11 +25,10 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1740326053065,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -37,8 +36,81 @@
         "y": 0
       },
       "id": 16,
+      "panels": [],
       "title": "Stats",
       "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "PC99C868E6302BA2B"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 0,
+        "y": 1
+      },
+      "id": 14,
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "queryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE time >= 1735489295036 / 1000 and time < 1743265295036 / 1000\nGROUP BY activity\n",
+          "queryType": "table",
+          "rawQueryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "count(.)",
+      "type": "piechart"
     },
     {
       "datasource": {
@@ -52,17 +124,23 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
+            "barWidthFactor": 0.4,
+            "drawStyle": "bars",
+            "fillOpacity": 70,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
@@ -91,14 +169,15 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
+        "h": 6,
+        "w": 19,
+        "x": 5,
         "y": 1
       },
       "id": 20,
@@ -106,30 +185,49 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.0",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT unixepoch(date) as time, strftime(\"%Y-%m\", date) as ym, activity, timeSeconds/60 as \"duration (min)\", distanceMeters/1000 as \"distance (km)\", speedMetersPerSecond*3.6 as \"avg speed (km/h)\", pace as \"pace\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY ym",
+          "hide": false,
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg running duration\"\nFROM summary\nWHERE\n  time >= 1735489295036 / 1000 and time < 1743265295036 / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
           "queryType": "table",
-          "rawQueryText": "SELECT unixepoch(date) as time, strftime(\"%Y-%m\", date) as ym, activity, timeSeconds/60 as \"duration (min)\", distanceMeters/1000 as \"distance (km)\", speedMetersPerSecond*3.6 as \"avg speed (km/h)\", pace as \"pace\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY ym",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg running duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
           "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "hide": false,
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg cycling duration\"\nFROM summary\nWHERE\n  time >= 1735489295036 / 1000 and time < 1743265295036 / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "queryType": "table",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "refId": "B",
           "timeColumns": [
             "time",
             "ts"
           ]
         }
       ],
-      "title": "Average duration and distance per month",
+      "title": "Activities with average duration (per day)",
       "type": "timeseries"
     },
     {
@@ -138,7 +236,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 7
       },
       "id": 12,
       "panels": [],
@@ -150,7 +248,7 @@
         "type": "frser-sqlite-datasource",
         "uid": "PC99C868E6302BA2B"
       },
-      "description": "",
+      "description": "max distance per activity",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -168,22 +266,24 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "lengthm"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 4,
-        "w": 24,
+        "w": 8,
         "x": 0,
-        "y": 9
+        "y": 8
       },
-      "id": 10,
+      "id": 23,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -191,19 +291,21 @@
           "fields": "",
           "values": true
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "8.5.15",
+      "pluginVersion": "11.6.0",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT unixepoch(date) as time, activity, max(timeSeconds)/60 as \"duration (min)\", max(distanceMeters)/1000 as \"distance (km)\", max(speedMetersPerSecond)*3.6 as \"avg speed (km/h)\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(distanceMeters)\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
           "queryType": "table",
-          "rawQueryText": "SELECT unixepoch(date) as time, activity, max(timeSeconds)/60 as \"duration (min)\", max(distanceMeters)/1000 as \"distance (km)\", max(speedMetersPerSecond)*3.6 as \"avg speed (km/h)\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(distanceMeters)\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -211,8 +313,153 @@
           ]
         }
       ],
-      "title": "max(.)",
-      "transformations": [],
+      "title": "Distance",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "PC99C868E6302BA2B"
+      },
+      "description": "max duration per activity",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 8
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(timeSeconds) as duration\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(timeSeconds) as duration\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "PC99C868E6302BA2B"
+      },
+      "description": "max average speed per activity",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "velocitykmh"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 8
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(speedMetersPerSecond*3.6)\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(speedMetersPerSecond*3.6)\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Speed",
       "type": "stat"
     },
     {
@@ -221,7 +468,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 12
       },
       "id": 8,
       "panels": [],
@@ -239,154 +486,32 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 5,
-        "x": 0,
-        "y": 14
-      },
-      "id": 14,
-      "options": {
-        "displayLabels": [],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "values": [
-            "percent"
-          ]
-        },
-        "pieType": "donut",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.5.15",
-      "targets": [
-        {
-          "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "PC99C868E6302BA2B"
-          },
-          "queryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
-          "queryType": "table",
-          "rawQueryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
-          "refId": "A",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        }
-      ],
-      "title": "count(.)",
-      "type": "piechart"
-    },
-    {
-      "cards": {},
-      "color": {
-        "cardColor": "#E0B400",
-        "colorScale": "sqrt",
-        "colorScheme": "interpolateBuGn",
-        "exponent": 0.5,
-        "mode": "opacity"
-      },
-      "dataFormat": "timeseries",
-      "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "PC99C868E6302BA2B"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 19,
-        "x": 5,
-        "y": 14
-      },
-      "heatmap": {},
-      "hideZeroBuckets": false,
-      "highlightCards": true,
-      "id": 18,
-      "legend": {
-        "show": false
-      },
-      "reverseYBuckets": false,
-      "targets": [
-        {
-          "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "PC99C868E6302BA2B"
-          },
-          "queryText": "SELECT unixepoch(date) as time, activity, timeSeconds/60 as \"duration (min)\", distanceMeters/1000 as \"distance (km)\", speedMetersPerSecond*3.6 as \"avg speed (km/h)\", pace as \"pace\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\n",
-          "queryType": "table",
-          "rawQueryText": "SELECT unixepoch(date) as time, activity, timeSeconds/60 as \"duration (min)\", distanceMeters/1000 as \"distance (km)\", speedMetersPerSecond*3.6 as \"avg speed (km/h)\", pace as \"pace\" from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\n",
-          "refId": "A",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        }
-      ],
-      "title": "Active days",
-      "tooltip": {
-        "show": true,
-        "showHistogram": true
-      },
-      "type": "heatmap",
-      "xAxis": {
-        "show": true
-      },
-      "yAxis": {
-        "format": "short",
-        "logBase": 1,
-        "show": true
-      },
-      "yBucketBound": "auto"
-    },
-    {
-      "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "PC99C868E6302BA2B"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-BlPu"
-          },
-          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 20,
-            "gradientMode": "scheme",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
-            "lineWidth": 3,
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "always",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -408,7 +533,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
@@ -416,30 +542,48 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 22
+        "y": 13
       },
       "id": 4,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "hideZeros": false,
+          "mode": "multi",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.0",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT unixepoch(date) as time, timeSeconds / 60 as \"duration (min)\", activity, gpx_name FROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\n",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  timeSeconds as \"running duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
           "queryType": "table",
-          "rawQueryText": "SELECT unixepoch(date) as time, timeSeconds / 60 as \"duration (min)\", activity, gpx_name FROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\n",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  timeSeconds as \"running duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
           "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "hide": false,
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  timeSeconds as \"cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "queryType": "table",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  timeSeconds as \"cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "refId": "B",
           "timeColumns": [
             "time",
             "ts"
@@ -457,27 +601,32 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-BlPu"
+            "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 20,
-            "gradientMode": "scheme",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
-            "lineWidth": 3,
+            "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "always",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -500,7 +649,7 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "lengthm"
         },
         "overrides": []
       },
@@ -508,30 +657,48 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 22
+        "y": 13
       },
       "id": 6,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.0",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT unixepoch(date) as time, distanceMeters/1000 as \"distance (km)\", activity, gpx_name from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"running distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
           "queryType": "table",
-          "rawQueryText": "SELECT unixepoch(date) as time, distanceMeters/1000 as \"distance (km)\", activity, gpx_name from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"running distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
           "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "PC99C868E6302BA2B"
+          },
+          "hide": false,
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "queryType": "table",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "refId": "B",
           "timeColumns": [
             "time",
             "ts"
@@ -553,7 +720,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "inspect": false
           },
           "mappings": [],
@@ -638,11 +807,13 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 21
       },
       "id": 2,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -653,20 +824,20 @@
         "sortBy": [
           {
             "desc": true,
-            "displayName": "timeSeconds"
+            "displayName": "time"
           }
         ]
       },
-      "pluginVersion": "8.5.15",
+      "pluginVersion": "11.6.0",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT date as 'date (started)', timeSeconds as 'duration', distanceMeters as 'distance', speedMetersPerSecond as 'speed', pace, activity, gpx_name as filename FROM summary\nORDER BY date DESC\n--WHERE unixepoch(date) >= $__from\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
+          "queryText": "SELECT\n  id as id,\n  unixepoch(date) as time,\n  timeSeconds as 'duration',\n  distanceMeters as 'distance',\n  speedMetersPerSecond as 'speed',\n  pace as 'pace (min/km)',\n  activity\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nORDER BY time DESC\n",
           "queryType": "table",
-          "rawQueryText": "SELECT date as 'date (started)', timeSeconds as 'duration', distanceMeters as 'distance', speedMetersPerSecond as 'speed', pace, activity, gpx_name as filename FROM summary\nORDER BY date DESC\n--WHERE unixepoch(date) >= $__from\n--WHERE time >= $__from / 1000 and time < $__to / 1000",
+          "rawQueryText": "SELECT\n  id as id,\n  unixepoch(date) as time,\n  timeSeconds as 'duration',\n  distanceMeters as 'distance',\n  speedMetersPerSecond as 'speed',\n  pace as 'pace (min/km)',\n  activity\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nORDER BY time DESC\n",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -678,46 +849,20 @@
       "type": "table"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 36,
-  "style": "dark",
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "current": {
-          "selected": false,
-          "text": "Running",
-          "value": "Running"
-        },
-        "datasource": {
-          "type": "frser-sqlite-datasource",
-          "uid": "PC99C868E6302BA2B"
-        },
-        "definition": "SELECT DISTINCT activity FROM summary",
-        "description": "Type of activity",
-        "hide": 0,
-        "includeAll": false,
-        "multi": true,
-        "name": "Activity",
-        "options": [],
-        "query": "SELECT DISTINCT activity FROM summary",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      }
-    ]
+    "list": []
   },
   "time": {
-    "from": "now-2y",
+    "from": "now-90d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "GPX Stats",
   "uid": "D0fQ_at4z",
-  "version": 2,
-  "weekStart": ""
+  "version": 2
 }
