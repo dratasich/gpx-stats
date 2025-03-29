@@ -23,7 +23,7 @@ $ ./import.py data/<file>.gpx
 
 Load all gpx files from a folder:
 ```bash
-$ ./load.sh data
+$ ./load.sh data stats.db
 ```
 
 Visualize [stats](http://localhost:8050):

@@ -2,16 +2,14 @@
 
 # %% imports
 import argparse
-from datetime import UTC, datetime
 import logging
 import os.path
 import sys
 
-from parser.file import File
-from parser.gpx import GPXParser
-from parser.tcx import TCXParser
-from parser.parser import Parser
-from stats_repository import StatsRepository
+from stats_loader.parser.gpx import GPXParser
+from stats_loader.parser.tcx import TCXParser
+from stats_loader.parser.parser import Parser
+from stats_loader.stats_repository import StatsRepository
 
 # %% parse cli arguments
 argparser = argparse.ArgumentParser("Activity summary importer.")
@@ -36,6 +34,11 @@ if repo.has_file(args.path):
 
 def tcx_backup() -> Parser:
     path = args.path.replace(".gpx", ".tcx")
+
+    # check if file exists anyway
+    if not os.path.exists(path):
+        logging.info("No TCX for backup.")
+        sys.exit(os.EX_DATAERR)
 
     # check if file exists in database
     if repo.has_file(path):
@@ -77,16 +80,15 @@ try:
 except ValueError as e:
     logging.warning(e)
     parser = tcx_backup()
-    stats = parser.summary()
+    try:
+        stats = parser.summary()
+    except ValueError as e:
+        logging.warning(e)
+        sys.exit(os.EX_DATAERR)
 
 # %% save summary to db
 repo.save_summary(stats)
 
 # %% save meta data
 assert parser.filename is not None, "With a summary we must also have a filename."
-f = File(
-    id=stats.id,
-    loaded=datetime.now(UTC),
-    basename=parser.filename,
-)
-repo.save_file(f)
+repo.save_file(parser.metadata)

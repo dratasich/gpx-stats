@@ -30,6 +30,14 @@ def test_parse_invalid_file(data_dir: str):
     assert parser.id is None
 
 
+def test_no_summary(data_dir: str):
+    parser = TCXParser()
+    parser.parse(f"{data_dir}/RunnerUp_2025-02-15-11-00-00_Other.tcx")
+    # no distance nor duration
+    with pytest.raises(ValueError):
+        parser.summary()
+
+
 def test_summary(data_dir: str):
     parser = TCXParser()
     parser.parse(f"{data_dir}/RunnerUp_2025-02-11-17-30-00_Cycling.tcx")

@@ -6,8 +6,8 @@ import os.path
 import pandas as pd
 from sqlalchemy import create_engine, inspect, text
 
-from parser.file import File
-from parser.summary import Summary
+from stats_loader.parser.file import File
+from stats_loader.parser.summary import Summary
 
 logger = logging.getLogger(__name__)
 
