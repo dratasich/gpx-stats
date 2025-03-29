@@ -144,21 +144,8 @@ class GPXParser:
             timeSeconds=df.iloc[-1]["t"],
             distanceMeters=df.iloc[-1]["2d"],
         )
-        logger.debug(f"distance: {df.iloc[-1]['2d']}")
 
-        distance_km = df.iloc[-1]["2d"] / 1000.0
-        if distance_km != 0 and stats.timeSeconds != 0:
-            logger.debug(f"avg km/h: {df.iloc[-1]['2d'] / df.iloc[-1]['t'] * 3.6}")
-            # add speed info
-            min_per_km = int((df.iloc[-1]["t"] / 60.0) / distance_km)
-            sec_remainder = round((df.iloc[-1]["t"] / distance_km) - (min_per_km * 60))
-            logger.debug(
-                f"pace min/km: {float(df.iloc[-1]['t']) / 60.0 / (df.iloc[-1]['2d'] / 1000)}"
-            )
-            logger.debug(f"pace min/km: {min_per_km}:{sec_remainder}")
-            stats.speedMetersPerSecond = df.iloc[-1]["2d"] / df.iloc[-1]["t"]
-            stats.pace = f"{min_per_km}:{sec_remainder}"
-
+        stats.fill_defaults()
         stats.activity = Activity.guess(self._gpxid, stats.speedMetersPerSecond)
 
         return stats
