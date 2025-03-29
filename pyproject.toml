@@ -13,6 +13,7 @@ dependencies = [
     "haversine<3.0.0,>=2.5.1",
     "pandas<3.0.0,>=2.2.0",
     "SQLAlchemy<3.0.0,>=2.0.36",
+    "xmltodict>=0.14.2",
 ]
 
 [project.optional-dependencies]
@@ -27,6 +28,7 @@ dev = [
     "pre-commit>=4.2.0",
     "pytest>=8.3.5",
     "ruff<1.0.0,>=0.8.4",
+    "types-xmltodict>=0.14.0.20241009",
 ]
 
 [build-system]
