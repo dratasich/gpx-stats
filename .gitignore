@@ -3,7 +3,20 @@
 *.pyc
 *.ipynb*
 
+# IDE
 .vscode
 
+# data dirs
+db
 gpx.db
-data
+./data/
+
+# env
+.venv
+
+# chaches
+__pycache__
+.ipynb_checkpoints
+.ruff_cache
+.mypy_cache
+.pytest_cache

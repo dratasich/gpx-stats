@@ -8,7 +8,7 @@ Dashboard visualizing stats based on gpx files.
 
 ```bash
 # install environment
-$ uv sync
+$ uv run pre-commit install
 ```
 
 
@@ -52,11 +52,4 @@ sqlite3 db/gpx.db
 List latest entries:
 ```sql
 SELECT * FROM files ORDER BY load_timestamp DESC LIMIT 5;
-```
-
-Run before commit
-```bash
-# code formatting
-ruff check --fix
-ruff format
 ```
