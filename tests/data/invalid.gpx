@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<sthelse>
+  <gpx>
+    <trk>
+      <trkseg>
+        <trkpt lat="59.123456" lon="10.123456">
+          <ele>123.45</ele>
+          <time>2019-01-01T12:00:00Z</time>
+        </trkpt>
+      </trkseg>
+    </trk>
+  </gpx>
+</sthelse>

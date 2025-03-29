@@ -13,6 +13,7 @@ dependencies = [
     "haversine<3.0.0,>=2.5.1",
     "pandas<3.0.0,>=2.2.0",
     "SQLAlchemy<3.0.0,>=2.0.36",
+    "xmltodict>=0.14.2",
 ]
 
 [project.optional-dependencies]
@@ -22,8 +23,20 @@ dashapp = [
 
 [dependency-groups]
 dev = [
+    "mypy>=1.15.0",
+    "pandas-stubs>=2.2.3.250308",
+    "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
     "ruff<1.0.0,>=0.8.4",
+    "types-xmltodict>=0.14.0.20241009",
 ]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["stats_loader"]
 
 # https://docs.astral.sh/ruff/configuration/
 [tool.ruff]
@@ -101,3 +114,8 @@ docstring-code-format = false
 # This only has an effect when the `docstring-code-format` setting is
 # enabled.
 docstring-code-line-length = "dynamic"
+
+# https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+[[tool.mypy.overrides]]
+module = ["haversine.*"]
+follow_untyped_imports = true
