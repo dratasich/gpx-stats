@@ -18,7 +18,7 @@ Add your gpx files to `data` (e.g., sync from your phone).
 
 Load gpx files, generate metadata and save to sqlite database:
 ```bash
-$ ./gpx.py data/<file>.gpx
+$ ./import.py data/<file>.gpx
 ```
 
 Load all gpx files from a folder:
