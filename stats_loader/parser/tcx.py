@@ -7,13 +7,14 @@ import os
 import pandas as pd
 import xmltodict
 
+from .parser import Parser
 from .activity import Activity
 from .summary import Summary
 
 logger = logging.getLogger(__name__)
 
 
-class TCXParser:
+class TCXParser(Parser):
     def __init__(self):
         # default values
         self._filename: str | None = None

@@ -12,7 +12,7 @@ def data_dir():
 def test_parse_valid_file(data_dir: str):
     parser = GPXParser()
     parser.parse(f"{data_dir}/RunnerUp_2025-02-03-08-31-00_Running.gpx")
-    assert parser.gpxid == "RunnerUp-Running-2025-02-03T07:31:00Z"
+    assert parser.id == "RunnerUp-Running-2025-02-03T07:31:00Z"
     assert parser.filename == "RunnerUp_2025-02-03-08-31-00_Running.gpx"
 
 
@@ -22,12 +22,12 @@ def test_parse_invalid_file(data_dir: str):
     with pytest.raises(FileNotFoundError):
         parser.parse(f"{data_dir}/nonexistent.gpx")
     assert parser.filename is None
-    assert parser.gpxid is None
+    assert parser.id is None
     # invalid content
     with pytest.raises(ValueError):
         parser.parse(f"{data_dir}/invalid.gpx")
     assert parser.filename is None
-    assert parser.gpxid is None
+    assert parser.id is None
 
 
 def test_route_data_no_segments(data_dir: str):

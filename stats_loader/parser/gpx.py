@@ -8,13 +8,14 @@ import gpxpy
 import haversine
 import pandas as pd
 
+from .parser import Parser
 from .activity import Activity
 from .summary import Summary
 
 logger = logging.getLogger(__name__)
 
 
-class GPXParser:
+class GPXParser(Parser):
     def __init__(self):
         # default values
         self._filename: str | None = None
@@ -26,7 +27,7 @@ class GPXParser:
         return self._filename
 
     @property
-    def gpxid(self) -> str | None:
+    def id(self) -> str | None:
         return self._gpxid
 
     def parse(self, filename):
