@@ -100,9 +100,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(distanceMeters)\nFROM summary\nWHERE time >= 1735542968925 / 1000 and time < 1743315368925 / 1000\nGROUP BY activity\n",
+          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(distanceMeters)\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY activity\n",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(distanceMeters)\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(distanceMeters)\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY activity\n",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -173,9 +173,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(timeSeconds) as duration\nFROM summary\nWHERE time >= 1735542968925 / 1000 and time < 1743315368925 / 1000\nGROUP BY activity\n",
+          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(timeSeconds) as duration\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY activity\n",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(timeSeconds) as duration\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(timeSeconds) as duration\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY activity\n",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -246,9 +246,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(speedMetersPerSecond*3.6)\nFROM summary\nWHERE time >= 1735542968925 / 1000 and time < 1743315368925 / 1000\nGROUP BY activity\n",
+          "queryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(speedMetersPerSecond*3.6)\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY activity\n",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(speedMetersPerSecond*3.6)\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "rawQueryText": "SELECT\n  unixepoch(date) as time,\n  activity,\n  max(speedMetersPerSecond*3.6)\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY activity\n",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -363,9 +363,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  speedMetersPerSecond*3.6 as \"avg running speed\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY interval",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  speedMetersPerSecond*3.6 as \"avg running speed\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\n  AND activity IN($activities)\nGROUP BY interval",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  speedMetersPerSecond*3.6 as \"avg running speed\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY interval",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  speedMetersPerSecond*3.6 as \"avg running speed\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\n  AND activity IN($activities)\nGROUP BY interval",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -378,9 +378,9 @@
             "uid": "PC99C868E6302BA2B"
           },
           "hide": false,
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  speedMetersPerSecond*3.6 as \"avg cycling speed\"\nFROM summary\nWHERE\n  time >= 1735542968925 / 1000 and time < 1743315368925 / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY interval",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  speedMetersPerSecond*3.6 as \"avg cycling speed\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN($activities)\nGROUP BY interval",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  speedMetersPerSecond*3.6 as \"avg cycling speed\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY interval",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  speedMetersPerSecond*3.6 as \"avg cycling speed\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN($activities)\nGROUP BY interval",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -450,7 +450,19 @@
           },
           "unit": "s"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "interval"
+            },
+            "properties": [
+              {
+                "id": "unit"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -490,9 +502,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  sum(timeSeconds) as \"duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\nGROUP BY interval, activity",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y\", date) as interval,\n  activity,\n  sum(timeSeconds) as \"duration\"\nFROM summary\nWHERE\n  time >= 1680158343582 / 1000 and time < 1743316743582 / 1000\n  AND activity IN('Cycling')\nGROUP BY interval, activity",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  sum(timeSeconds) as \"duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\nGROUP BY interval, activity",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  sum(timeSeconds) as \"duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY interval, activity",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -505,9 +517,9 @@
             "uid": "PC99C868E6302BA2B"
           },
           "hide": true,
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  timeSeconds as \"cycling duration\"\nFROM summary\nWHERE\n  time >= 1735542968925 / 1000 and time < 1743315368925 / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY interval",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  timeSeconds as \"cycling duration\"\nFROM summary\nWHERE\n  time >= 1680158343582 / 1000 and time < 1743316743582 / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN('Cycling')\nGROUP BY interval",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  timeSeconds as \"cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY interval",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  timeSeconds as \"cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN($activities)\nGROUP BY interval",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -565,7 +577,19 @@
           },
           "unit": "lengthm"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "interval"
+            },
+            "properties": [
+              {
+                "id": "unit"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -596,7 +620,7 @@
         },
         "xField": "interval",
         "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
+        "xTickLabelSpacing": 100
       },
       "pluginVersion": "11.6.0",
       "targets": [
@@ -605,9 +629,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  sum(distanceMeters) as distance\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\nGROUP BY interval, activity",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y\", date) as interval,\n  activity,\n  sum(distanceMeters) as distance\nFROM summary\nWHERE\n  time >= 1680158343582 / 1000 and time < 1743316743582 / 1000\n  AND activity IN('Cycling')\nGROUP BY interval, activity",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  sum(distanceMeters) as distance\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\nGROUP BY interval, activity",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  sum(distanceMeters) as distance\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY interval, activity",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -620,9 +644,9 @@
             "uid": "PC99C868E6302BA2B"
           },
           "hide": true,
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= 1735542968925 / 1000 and time < 1743315368925 / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= 1680158343582 / 1000 and time < 1743316743582 / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN('Cycling')\nGROUP BY day",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN($activities)\nGROUP BY day",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -705,9 +729,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE time >= 1735489295036 / 1000 and time < 1743265295036 / 1000\nGROUP BY activity\n",
+          "queryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY activity\n",
           "queryType": "table",
-          "rawQueryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nGROUP BY activity\n",
+          "rawQueryText": "SELECT unixepoch(date) as time, activity, count(activity) as cnt from summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nGROUP BY activity\n",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -808,9 +832,9 @@
             "uid": "PC99C868E6302BA2B"
           },
           "hide": false,
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg running duration\"\nFROM summary\nWHERE\n  time >= 1735489295036 / 1000 and time < 1743265295036 / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg running duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\n  AND activity IN($activities)\nGROUP BY day",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg running duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg running duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\n  AND activity IN($activities)\nGROUP BY day",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -823,9 +847,9 @@
             "uid": "PC99C868E6302BA2B"
           },
           "hide": false,
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg cycling duration\"\nFROM summary\nWHERE\n  time >= 1735489295036 / 1000 and time < 1743265295036 / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg cycling duration\"\nFROM summary\nWHERE\n  time >= 1680158343582 / 1000 and time < 1743316743582 / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN('Cycling', 'Running')\nGROUP BY day",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  avg(timeSeconds) as \"avg cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN($activities)\nGROUP BY day",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -927,9 +951,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  timeSeconds as \"running duration\"\nFROM summary\nWHERE\n  time >= 1735539976168 / 1000 and time < 1743312376168 / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  avg(timeSeconds) as \"running duration\"\nFROM summary\nWHERE\n  time >= 1680160140621 / 1000 and time < 1743318540621 / 1000\n  AND activity LIKE \"Running\"\n  AND activity IN('Cycling', 'Running')\nGROUP BY interval",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  timeSeconds as \"running duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  avg(timeSeconds) as \"running duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\n  AND activity IN($activities)\nGROUP BY interval",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -942,9 +966,9 @@
             "uid": "PC99C868E6302BA2B"
           },
           "hide": false,
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  timeSeconds as \"cycling duration\"\nFROM summary\nWHERE\n  time >= 1735539976168 / 1000 and time < 1743312376168 / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  avg(timeSeconds) as \"cycling duration\"\nFROM summary\nWHERE\n  time >= 1680160140621 / 1000 and time < 1743318540621 / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN('Cycling', 'Running')\nGROUP BY interval",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  timeSeconds as \"cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  avg(timeSeconds) as \"cycling duration\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN($activities)\nGROUP BY interval",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -952,7 +976,7 @@
           ]
         }
       ],
-      "title": "Duration",
+      "title": "Duration (avg)",
       "type": "timeseries"
     },
     {
@@ -1043,9 +1067,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"running distance\"\nFROM summary\nWHERE\n  time >= 1735539976168 / 1000 and time < 1743312376168 / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  avg(distanceMeters) as \"running distance\"\nFROM summary\nWHERE\n  time >= 1680160140621 / 1000 and time < 1743318540621 / 1000\n  AND activity LIKE \"Running\"\n  AND activity IN('Cycling', 'Running')\nGROUP BY interval",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"running distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\nGROUP BY day",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  avg(distanceMeters) as \"running distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Running\"\n  AND activity IN($activities)\nGROUP BY interval",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -1058,9 +1082,9 @@
             "uid": "PC99C868E6302BA2B"
           },
           "hide": false,
-          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= 1735539976168 / 1000 and time < 1743312376168 / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "queryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as interval,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= 1680160140621 / 1000 and time < 1743318540621 / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN('Cycling', 'Running')\nGROUP BY interval",
           "queryType": "table",
-          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime(\"%Y-%m\", date) as month,\n  strftime(\"%Y-%m-%d\", date) as day,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\nGROUP BY day",
+          "rawQueryText": "SELECT \n  unixepoch(date) as time,\n  strftime($interval, date) as interval,\n  activity,\n  distanceMeters as \"cycling distance\"\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity LIKE \"Cycling\"\n  AND activity IN($activities)\nGROUP BY interval",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -1068,7 +1092,7 @@
           ]
         }
       ],
-      "title": "Distance",
+      "title": "Distance (avg)",
       "type": "timeseries"
     },
     {
@@ -1198,9 +1222,9 @@
             "type": "frser-sqlite-datasource",
             "uid": "PC99C868E6302BA2B"
           },
-          "queryText": "SELECT\n  id as id,\n  unixepoch(date) as time,\n  timeSeconds as 'duration',\n  distanceMeters as 'distance',\n  speedMetersPerSecond as 'speed',\n  pace as 'pace (min/km)',\n  activity\nFROM summary\nWHERE time >= 1735539976168 / 1000 and time < 1743312376168 / 1000\nORDER BY time DESC\n",
+          "queryText": "SELECT\n  id as id,\n  unixepoch(date) as time,\n  timeSeconds as 'duration',\n  distanceMeters as 'distance',\n  speedMetersPerSecond as 'speed',\n  pace as 'pace (min/km)',\n  activity\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nORDER BY time DESC\n",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  id as id,\n  unixepoch(date) as time,\n  timeSeconds as 'duration',\n  distanceMeters as 'distance',\n  speedMetersPerSecond as 'speed',\n  pace as 'pace (min/km)',\n  activity\nFROM summary\nWHERE time >= $__from / 1000 and time < $__to / 1000\nORDER BY time DESC\n",
+          "rawQueryText": "SELECT\n  id as id,\n  unixepoch(date) as time,\n  timeSeconds as 'duration',\n  distanceMeters as 'distance',\n  speedMetersPerSecond as 'speed',\n  pace as 'pace (min/km)',\n  activity\nFROM summary\nWHERE\n  time >= $__from / 1000 and time < $__to / 1000\n  AND activity IN($activities)\nORDER BY time DESC\n",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -1218,6 +1242,35 @@
   "tags": [],
   "templating": {
     "list": [
+      {
+        "allowCustomValue": false,
+        "current": {
+          "text": "'Cycling', 'Running'",
+          "value": "'Cycling', 'Running'"
+        },
+        "description": "",
+        "label": "Activities",
+        "name": "activities",
+        "options": [
+          {
+            "selected": false,
+            "text": "'Cycling'",
+            "value": "'Cycling'"
+          },
+          {
+            "selected": false,
+            "text": "'Running'",
+            "value": "'Running'"
+          },
+          {
+            "selected": true,
+            "text": "'Cycling', 'Running'",
+            "value": "'Cycling', 'Running'"
+          }
+        ],
+        "query": "'Cycling',\n'Running',\n'Cycling'\\, 'Running'",
+        "type": "custom"
+      },
       {
         "allowCustomValue": false,
         "current": {
@@ -1250,12 +1303,12 @@
     ]
   },
   "time": {
-    "from": "now-90d",
+    "from": "now-2y",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "GPX Stats",
   "uid": "D0fQ_at4z",
-  "version": 5
+  "version": 8
 }
