@@ -14,12 +14,12 @@ logging.basicConfig(
 )
 
 # %% database setup
-DB = "gpx.db"
+DB = "db/gpx.db"
 logging.info(f"Connect to '{DB}'...")
 engine = create_engine(f"sqlite:///{DB}")
 TABLE = "summary"
 df = pd.read_sql(f"SELECT * from {TABLE}", engine)
-df = df.astype({"date": "datetime64"})
+df = df.astype({"date": "datetime64[s]"})
 logging.info(f"Loaded '{len(df)}' entries from table {TABLE}")
 df.info()
 print(df.head())
