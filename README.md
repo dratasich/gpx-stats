@@ -3,6 +3,7 @@ gpx-stats
 
 Dashboard visualizing stats based on gpx files.
 
+![Screenshot of the grafana dashboard](./docs/grafana.png)
 
 ## Setup
 
@@ -21,7 +22,7 @@ Load gpx files, generate metadata and save to sqlite database:
 $ ./import.py data/<file>.gpx
 ```
 If the file has no tracks (e.g., because its a manual entry)
-then try the `tcx` file (should contain duration and distance).
+then it will try the `tcx` file (should contain duration and distance).
 
 Load all gpx files from a folder:
 ```bash
@@ -29,11 +30,8 @@ mkdir db
 $ ./load.sh data db/gpx.db
 ```
 
-Visualize [stats](http://localhost:8050):
-```bash
-$ python app.py
-```
-or with [grafana](https://grafana.com/docs/grafana/latest/)
+Visualize the stats with
+[grafana](https://grafana.com/docs/grafana/latest/)
 at [localhost:3000](http://localhost:3000)
 with default username and password `admin:admin`:
 ```bash
@@ -42,6 +40,12 @@ $ docker-compose up
 $ podman compose up
 ```
 
+Or a speed boxplot with a mini [dash app](http://localhost:8050):
+```bash
+$ uv sync --extra dashapp
+$ uv run python app.py
+```
+![Screenshot of the dashapp (= speed boxplot)](./docs/dashapp.png)
 
 ## Development
 
