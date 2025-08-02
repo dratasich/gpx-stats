@@ -120,3 +120,8 @@ docstring-code-line-length = "dynamic"
 [[tool.mypy.overrides]]
 module = ["haversine.*"]
 follow_untyped_imports = true
+
+[tool.pytest.ini_options]
+# Exclude integration tests by default
+addopts = "--ignore=tests/integration"
+testpaths = ["tests"]

@@ -51,19 +51,24 @@ $ uv run python app.py
 
 ### Testing
 
-Run all tests:
+Run tests:
 ```bash
-$ uv run pytest tests/
+$ uv run pytest
+```
+
+Run integration tests (excluded by default):
+```bash
+$ uv run pytest tests/integration/
 ```
 
 Run tests with coverage report:
 ```bash
-$ uv run pytest --cov=stats_loader --cov-report=term tests/
+$ uv run pytest --cov=stats_loader --cov-report=term-missing
 ```
 
 Generate HTML coverage report:
 ```bash
-$ uv run pytest --cov=stats_loader --cov-report=html tests/
+$ uv run pytest --cov=stats_loader --cov-report=html
 # Open htmlcov/index.html in browser
 ```
 
