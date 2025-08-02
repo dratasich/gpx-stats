@@ -85,3 +85,8 @@ class StatsRepository:
             index=True,  # index = time -> save too!
         )
         logging.info(f"{len(df)} locations of '{df['id'].iloc[0]}' saved to database.")
+
+    def __del__(self) -> None:
+        self._engine.dispose()
+        if self._engine_locations:
+            self._engine_locations.dispose()
