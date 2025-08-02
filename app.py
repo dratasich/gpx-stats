@@ -1,12 +1,17 @@
 # %% load
+import argparse
 import logging
+
 import dash
-from dash import dcc, html
-from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.express as px
+from dash import dcc, html
+from dash.dependencies import Input, Output
 from sqlalchemy import create_engine
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--db", type=str, default="db/gpx.db")
+args = parser.parse_args()
 
 # %% init logger
 logging.basicConfig(
@@ -14,9 +19,8 @@ logging.basicConfig(
 )
 
 # %% database setup
-DB = "db/gpx.db"
-logging.info(f"Connect to '{DB}'...")
-engine = create_engine(f"sqlite:///{DB}")
+logging.info(f"Connect to '{args.db}'...")
+engine = create_engine(f"sqlite:///{args.db}")
 TABLE = "summary"
 df = pd.read_sql(f"SELECT * from {TABLE}", engine)
 df = df.astype({"date": "datetime64[s]"})
