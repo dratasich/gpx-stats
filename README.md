@@ -49,6 +49,26 @@ $ uv run python app.py
 
 ## Development
 
+### Testing
+
+Run all tests:
+```bash
+$ uv run pytest tests/
+```
+
+Run tests with coverage report:
+```bash
+$ uv run pytest --cov=stats_loader --cov-report=term tests/
+```
+
+Generate HTML coverage report:
+```bash
+$ uv run pytest --cov=stats_loader --cov-report=html tests/
+# Open htmlcov/index.html in browser
+```
+
+### Database Debugging
+
 Debug database:
 ```bash
 sqlite3 db/gpx.db

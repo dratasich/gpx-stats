@@ -27,6 +27,7 @@ dev = [
     "pandas-stubs>=2.2.3.250308",
     "pre-commit>=4.2.0",
     "pytest>=8.3.5",
+    "pytest-cov>=6.2.1",
     "ruff<1.0.0,>=0.8.4",
     "types-xmltodict>=0.14.0.20241009",
 ]
