@@ -86,3 +86,15 @@ def test_implicit_calls_of_summary():
     parser.parse("tests/data/RunnerUp_2025-02-03-08-31-00_Running.gpx")
     s = parser.summary()
     assert s.activity == Activity.RUNNING
+
+
+def test_locations():
+    parser = GPXParser()
+    parser.parse("tests/data/RunnerUp_2025-02-03-08-31-00_Running.gpx")
+    df = parser.locations()
+    assert len(df) > 0
+    assert "lat" in df.columns
+    assert "lon" in df.columns
+    assert "id" in df.columns
+    assert "activity" in df.columns
+    assert "time" in df.reset_index().columns

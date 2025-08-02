@@ -16,11 +16,12 @@ logger = logging.getLogger(__name__)
 
 
 class GPXParser(Parser):
-    def __init__(self):
+    def __init__(self) -> None:
         # default values
         self._filename: str | None = None
         self._gpxid: str | None = None
         self._df: pd.DataFrame | None = None
+        self._stats: Summary | None = None
 
     @property
     def filename(self) -> str | None:
@@ -148,5 +149,21 @@ class GPXParser(Parser):
 
         stats.fill_defaults()
         stats.activity = Activity.guess(self._gpxid, stats.speedMetersPerSecond)
+        self._stats = stats
 
         return stats
+
+    def locations(self) -> pd.DataFrame:
+        """Returns a list of locations."""
+        if self._stats is None:
+            stats = self.summary()
+        else:
+            stats = self._stats
+
+        # locations/route (one location per row)
+        df = self._df
+        if df is None:
+            return pd.DataFrame()
+        df["id"] = self._gpxid
+        df["activity"] = Activity.guess(self._gpxid, stats.speedMetersPerSecond)
+        return df[["id", "activity", "lat", "lon"]]

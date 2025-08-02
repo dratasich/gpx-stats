@@ -15,6 +15,9 @@ from stats_loader.stats_repository import StatsRepository
 argparser = argparse.ArgumentParser("Activity summary importer.")
 argparser.add_argument("path", type=str, help="path to input file")
 argparser.add_argument("--db", type=str, help="path to db", default="db/test.db")
+argparser.add_argument(
+    "--db-locations", type=str, help="path to db for locations", default="db/test.db"
+)
 args = argparser.parse_args()
 
 # %% init logger
@@ -25,7 +28,10 @@ logging.basicConfig(
 logging.info(f"Load '{args.path}'...")
 
 # %% database setup
-repo = StatsRepository(args.db)
+if args.db != args.db_locations:
+    repo = StatsRepository(args.db, args.db_locations)
+else:
+    repo = StatsRepository(args.db)
 
 # %% check if file exists in database
 if repo.has_file(args.path):
@@ -33,7 +39,12 @@ if repo.has_file(args.path):
 
 
 def tcx_backup() -> Parser:
-    path = args.path.replace(".gpx", ".tcx")
+    if args.path.endswith(".gpx"):
+        path = args.path.replace(".gpx", ".tcx")
+    elif args.path.endswith(".tcx"):
+        path = args.path
+    else:
+        logging.warning(f"{args.path}: Unknown file format/ending - skip.")
 
     # check if file exists anyway
     if not os.path.exists(path):
@@ -59,8 +70,18 @@ def tcx_backup() -> Parser:
     return parser
 
 
-# %% parse GPX
-parser: Parser = GPXParser()
+# %% setup parser
+parser: Parser | None = None
+if args.path.endswith(".gpx"):
+    parser = GPXParser()
+elif args.path.endswith(".tcx"):
+    parser = TCXParser()
+else:
+    raise ValueError(f"{args.path}: Unknown file format/ending")
+
+
+# %% parse file
+assert parser is not None
 try:
     parser.parse(args.path)
 except ValueError as e:
@@ -77,6 +98,8 @@ if repo.has_id(parser.id):
 try:
     stats = parser.summary()
     logging.debug(stats)
+    # get and save locations (gpx only)
+    repo.save_location(parser.locations())
 except ValueError as e:
     logging.warning(e)
     parser = tcx_backup()
@@ -85,6 +108,8 @@ except ValueError as e:
     except ValueError as e:
         logging.warning(e)
         sys.exit(os.EX_DATAERR)
+except NotImplementedError:
+    logging.debug("Probably a tcx without locations ;)")
 
 # %% save summary to db
 repo.save_summary(stats)

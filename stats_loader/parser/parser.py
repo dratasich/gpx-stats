@@ -1,6 +1,8 @@
 """Abstract parser class for parsing activity files."""
 
-from datetime import datetime, UTC
+from datetime import UTC, datetime
+
+import pandas as pd
 
 from .file import File
 from .summary import Summary
@@ -19,6 +21,9 @@ class Parser:
         raise NotImplementedError
 
     def summary(self) -> Summary:
+        raise NotImplementedError
+
+    def locations(self) -> pd.DataFrame:
         raise NotImplementedError
 
     @property

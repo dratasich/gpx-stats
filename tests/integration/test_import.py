@@ -25,3 +25,19 @@ def test_load_script(data_dir: str):
     assert not db.has_file("RunnerUp_2025-02-15-11-00-00_Other.tcx")
     # cleanup
     os.remove(db_path)
+
+
+def test_extra_location_db(data_dir: str):
+    db_name = f"{int(datetime.now(UTC).timestamp())}"
+    # load data to db
+    subprocess.run(
+        "uv run python stats_loader/import.py"
+        + f" --db {db_name}.db --db-locations {db_name}_locations.db"
+        + f" {data_dir}/RunnerUp_2025-02-03-08-31-00_Running.gpx",
+        shell=True,
+    )
+    assert os.path.exists(f"{db_name}.db")
+    assert os.path.exists(f"{db_name}_locations.db")
+    # cleanup
+    os.remove(f"{db_name}.db")
+    os.remove(f"{db_name}_locations.db")

@@ -13,12 +13,16 @@ logger = logging.getLogger(__name__)
 
 
 class StatsRepository:
-    def __init__(self, db: str):
+    def __init__(self, db: str, db_locations: str | None = None):
         self._dbname = db
         self._engine = create_engine(f"sqlite:///{db}")
+        self._engine_locations = self._engine
+        if db_locations is not None:
+            self._engine_locations = create_engine(f"sqlite:///{db_locations}")
         self._insp = inspect(self._engine)
         self._TABLE_SUMMARY = "summary"
         self._TABLE_FILES = "files"
+        self._TABLE_LOCATIONS = "locations"
 
     def has_file(self, filename_or_path: str) -> bool:
         """Check if file has been loaded to the db."""
@@ -70,3 +74,14 @@ class StatsRepository:
         df = pd.DataFrame.from_records([file.__dict__], index=["id"])
         df.to_sql(self._TABLE_FILES, self._engine, if_exists="append")
         logging.info(f"File data of '{file.id}' saved to database.")
+
+    def save_location(self, df: pd.DataFrame):
+        """Appends locations."""
+        cols = ["id", "lat", "lon", "activity"]
+        df[cols].to_sql(
+            self._TABLE_LOCATIONS,
+            self._engine_locations,
+            if_exists="append",
+            index=True,  # index = time -> save too!
+        )
+        logging.info(f"{len(df)} locations of '{df['id'].iloc[0]}' saved to database.")
