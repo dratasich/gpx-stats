@@ -5,6 +5,10 @@ Dashboard visualizing stats based on gpx files.
 
 ![Screenshot of the grafana dashboard](./docs/grafana.png)
 
+Tested with GPX/TCX from:
+* [RunnerUp](https://github.com/jonasoreland/runnerup)
+* [Gadgetbridge](https://gadgetbridge.org/)
+
 ## Setup
 
 ```bash
