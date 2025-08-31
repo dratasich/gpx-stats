@@ -38,7 +38,13 @@ class GPXParser(Parser):
         if len(self._gpx.tracks) == 0:
             raise ValueError("No tracks found.")
         self._filename = os.path.basename(filename)
-        self._gpxid = self._gpx.tracks[0].name
+        if self._gpx.tracks[0].name is not None:
+            self._gpxid = self._gpx.tracks[0].name
+        # probably a better id for gadgetbridge exported gpx
+        # elif self._gpx.tracks[0].extensions[0].text is not None:
+        #     self._gpxid = self._gpx.tracks[0].extensions[0].text
+        else:
+            self._gpxid = self._gpx.name
         logger.info(f"Parsed gpx file with id {self._gpxid}.")
 
     def route_data(self) -> pd.DataFrame:
@@ -148,7 +154,9 @@ class GPXParser(Parser):
         )
 
         stats.fill_defaults()
-        stats.activity = Activity.guess(self._gpxid, stats.speedMetersPerSecond)
+        stats.activity = Activity.guess(
+            self._gpxid, stats.speedMetersPerSecond, df["speed"].max()
+        )
         self._stats = stats
 
         return stats

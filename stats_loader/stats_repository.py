@@ -67,7 +67,7 @@ class StatsRepository:
         pd.DataFrame(stats.__dict__, index=["id"]).to_sql(
             self._TABLE_SUMMARY, self._engine, if_exists="append", index=False
         )
-        logging.info(f"Stats of '{stats.id}' saved to database.")
+        logging.info(f"Stats of '{stats.id}' ({stats.activity}) saved to database.")
 
     def save_file(self, file: File):
         """Appends a row to the files table."""
