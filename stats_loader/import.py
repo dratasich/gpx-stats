@@ -6,6 +6,8 @@ import logging
 import os.path
 import sys
 
+from gpxpy.gpx import GPXXMLSyntaxException
+
 from stats_loader.parser.gpx import GPXParser
 from stats_loader.parser.tcx import TCXParser
 from stats_loader.parser.parser import Parser
@@ -63,7 +65,7 @@ def tcx_backup() -> Parser:
         parser.parse(path)
     except FileNotFoundError as e:
         logging.error(f"No TCX file found (backup for {args.path}). {e}")
-    except ValueError as e:
+    except (ValueError, GPXXMLSyntaxException) as e:
         logging.warning(e)
         sys.exit(os.EX_DATAERR)
 
@@ -84,7 +86,7 @@ else:
 assert parser is not None
 try:
     parser.parse(args.path)
-except ValueError as e:
+except (ValueError, GPXXMLSyntaxException) as e:
     logging.warning(e)
     parser = tcx_backup()
 # %% check if data with same id exists in database

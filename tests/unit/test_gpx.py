@@ -1,5 +1,6 @@
 import pandas as pd
 from stats_loader.parser.gpx import GPXParser
+from gpxpy.gpx import GPXXMLSyntaxException
 import pytest
 
 
@@ -18,6 +19,11 @@ def test_parse_invalid_file(data_dir: str):
     # invalid content
     with pytest.raises(ValueError):
         parser.parse(f"{data_dir}/invalid.gpx")
+    assert parser.filename is None
+    assert parser.id is None
+    # empty file
+    with pytest.raises(GPXXMLSyntaxException):
+        parser.parse(f"{data_dir}/empty.gpx")
     assert parser.filename is None
     assert parser.id is None
 
