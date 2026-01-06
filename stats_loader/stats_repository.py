@@ -23,6 +23,7 @@ class StatsRepository:
         self._TABLE_SUMMARY = "summary"
         self._TABLE_FILES = "files"
         self._TABLE_LOCATIONS = "locations"
+        logger.info(f"Initialized database '{self._dbname}'.")
 
     def has_file(self, filename_or_path: str) -> bool:
         """Check if file has been loaded to the db."""
@@ -38,7 +39,7 @@ class StatsRepository:
                     """)
                 ).fetchall()
                 if len(res) >= 1:
-                    logging.warning(f"File '{basename}' already loaded to database.")
+                    logger.warning(f"File '{basename}' already loaded to database.")
                     return True
         return False
 
@@ -55,7 +56,7 @@ class StatsRepository:
                     """)
                 ).fetchall()
                 if len(res) >= 1:
-                    logging.warning(
+                    logger.warning(
                         f"""GPX with same id '{gpxid}' already loaded to database."""
                         f"""Timestamp and path: {res[0][1]} '{res[0]}'"""
                     )
@@ -67,13 +68,13 @@ class StatsRepository:
         pd.DataFrame(stats.__dict__, index=["id"]).to_sql(
             self._TABLE_SUMMARY, self._engine, if_exists="append", index=False
         )
-        logging.info(f"Stats of '{stats.id}' ({stats.activity}) saved to database.")
+        logger.info(f"Stats of '{stats.id}' ({stats.activity}) saved to database.")
 
     def save_file(self, file: File):
         """Appends a row to the files table."""
         df = pd.DataFrame.from_records([file.__dict__], index=["id"])
         df.to_sql(self._TABLE_FILES, self._engine, if_exists="append")
-        logging.info(f"File data of '{file.id}' saved to database.")
+        logger.info(f"File data of '{file.id}' saved to database.")
 
     def save_location(self, df: pd.DataFrame):
         """Appends locations."""
@@ -84,7 +85,7 @@ class StatsRepository:
             if_exists="append",
             index=True,  # index = time -> save too!
         )
-        logging.info(f"{len(df)} locations of '{df['id'].iloc[0]}' saved to database.")
+        logger.info(f"{len(df)} locations of '{df['id'].iloc[0]}' saved to database.")
 
     def __del__(self) -> None:
         self._engine.dispose()
